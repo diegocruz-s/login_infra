@@ -1,5 +1,13 @@
 import { User } from "../../../domain/entities/User";
-import { ExpiresIn, ICompareHash, IDatasLoginUser, IGenerateToken, ILoginUserRepository, ILoginUserUseCase, IResponseLoginUser } from "./protocols";
+import { IResponseLoginUser } from "../../interfaces/IReturnDatasLogin";
+import { 
+  ExpiresIn, 
+  ICompareHash, 
+  IDatasLoginUser, 
+  IGenerateToken, 
+  ILoginUserRepository, 
+  ILoginUserUseCase 
+} from "./protocols";
 
 export class LoginUserUseCase implements ILoginUserUseCase {
   constructor (
