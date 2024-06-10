@@ -4,15 +4,14 @@ import { User } from '../../../domain/entities/User';
 import { ICompareHash, IGenerateToken, ILoginUserRepository } from './protocols';
 import { randomUUID } from 'crypto';
 
-const userTest = new User({
-  email: 'test@gmail.com',
-  password: 'Test@123',
-});
+const user = new User({ email: 'any@email.com', password: 'Any_pass' });
 
 const makeFakeLoginRepository = () => { 
   class LoginRepository implements ILoginUserRepository {
+    private readonly users: User[] = [user];
+
     async findUser(infoUser: { email: string; }): Promise<User | null> {
-      return userTest;
+      return this.users.find(user => user.email === infoUser.email) || null;
     };
   };
 
@@ -22,6 +21,7 @@ const makeFakeLoginRepository = () => {
     loginRepository
   };
 };
+
 const makeFakeCompareHash = () => {
   class CompareHash implements ICompareHash {
     async run(datas: { password: string; hash: string; }): Promise<boolean> {
@@ -36,6 +36,7 @@ const makeFakeCompareHash = () => {
     compareHash,
   };
 };
+
 const makeFakeGenerateToken = () => {
   class GenerateToken implements IGenerateToken {
     async create(tokenDatas: { id: string; secret: string; expiresIn: string; }): Promise<string> {
@@ -68,8 +69,8 @@ describe('Login User Use Case', () => {
     const { loginUserUseCase } = makeLoginUserUseCase();
 
     const { datas, errors } = await loginUserUseCase.execute({
-      email: userTest.email,
-      password: userTest.password,
+      email: user.email,
+      password: user.password,
     });    
 
     expect(datas!.token.length).toBeGreaterThan(0);
@@ -77,5 +78,51 @@ describe('Login User Use Case', () => {
     expect(datas!.user).not.toHaveProperty('password');
     expect(datas!.user.email).toBeTruthy();
     expect(errors).toBeFalsy();
+  });
+
+  it('should return a error when user is not exists', async () => {
+    const { loginUserUseCase } = makeLoginUserUseCase();
+
+    const { datas, errors } = await loginUserUseCase.execute({
+      email: 'any_email@gmail.com',
+      password: user.password,
+    });        
+    
+    expect(datas).toBeFalsy();
+    expect(errors?.length).toBe(1);
+    expect(errors![0]).toBe('Authenticated failed!');
+  });
+
+  it('should return a error when password is not correct', async () => {
+    const { loginUserUseCase } = makeLoginUserUseCase();
+
+    const { datas, errors } = await loginUserUseCase.execute({
+      email: user.email,
+      password: 'Outher_pass',
+    });        
+    
+    expect(datas).toBeFalsy();
+    expect(errors?.length).toBe(1);
+    expect(errors![0]).toBe('Authenticated failed!');
+  });
+
+  it('should return a equal error when password and email is not correct', async () => {
+    const { loginUserUseCase } = makeLoginUserUseCase();
+
+    const responseOne = await loginUserUseCase.execute({
+      email: user.email,
+      password: 'Outher_pass',
+    });        
+    
+    const responseTwo = await loginUserUseCase.execute({
+      email: 'any_email@gmail.com',
+      password: user.password,
+    });   
+
+    expect(responseOne.datas).toBeFalsy();
+    expect(responseTwo.datas).toBeFalsy();
+    expect(responseOne.errors?.length).toBe(1);
+    expect(responseTwo.errors?.length).toBe(1);
+    expect(responseOne.errors![0]).toBe(responseTwo.errors![0]);
   });
 });
