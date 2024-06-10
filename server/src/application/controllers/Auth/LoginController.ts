@@ -5,7 +5,7 @@ import { ILoginUserUseCase } from "../../useCases/Auth/protocols";
 import { IHttpRequest, IHttpResponse } from "../globalInterfaces";
 import { IDatasLoginUserRequest, ILoginController } from "./protocols";
 import { validation } from "../../../shared/utils/validationZod";
-import { ok } from "../../../shared/utils/returnsHttp";
+import { ok, unprocessable } from "../../../shared/utils/returnsHttp";
 
 const validationLogin = z.object({
   email: z.string().email(),
@@ -23,29 +23,17 @@ export class LoginController implements ILoginController {
       schema: validationLogin
     });
 
-    if (!isValid && !!errorsValidation) {
-      return {
-        body: {
-          errors: errorsValidation
-        },
-        statusCode: 422,
-      };
-    };
-
+    if (!isValid && !!errorsValidation) 
+      return unprocessable({ errors: errorsValidation });
+    
     const responseUseCase = await this.loginUserUseCase.execute({
       email: httpRequest.body?.email!,
       password: httpRequest.body?.password!,
     });
 
-    if(responseUseCase.errors) {
-      return {
-        body: {
-          errors: responseUseCase.errors,
-        },
-        statusCode: 404
-      };
-    };
+    if(responseUseCase.errors) 
+      return unprocessable({ errors: responseUseCase.errors });
 
-    return ok<IResponseLoginUser>(responseUseCase);
+    return ok(responseUseCase);
   };
 };
