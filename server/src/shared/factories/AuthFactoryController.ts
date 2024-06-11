@@ -5,7 +5,6 @@ import { CompareHashBcrypt } from "../utils/CompareHashBcrypt";
 import { GenerateTokenJWT } from "../utils/GenerateTokenJwt";
 
 export function loginFactoryController () {
-  // UseCase
   const loginRepository = new MongoAuthRepository();
   const compareHashBcrypt = new CompareHashBcrypt();
   const generateTokenJWT = new GenerateTokenJWT();
