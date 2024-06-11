@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { LoginUserUseCase } from "./LoginUseCase";
+import { LoginUserUseCase } from "./AuthUseCase";
 import { User } from '../../../domain/entities/User';
 import { ICompareHash, IGenerateToken, ILoginUserRepository } from './protocols';
 import { randomUUID } from 'crypto';

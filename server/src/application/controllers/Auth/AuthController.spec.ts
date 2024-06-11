@@ -2,7 +2,7 @@ import { randomUUID } from "crypto";
 import { User } from "../../../domain/entities/User";
 import { IResponseLoginUser } from "../../interfaces/IReturnDatasLogin";
 import { IDatasLoginUser, ILoginUserUseCase } from "../../useCases/Auth/protocols";
-import { LoginController } from "./LoginController";
+import { LoginController } from "./AuthController";
 
 const user = new User({ email: 'any@email.com', password: 'Any_pass' });
 

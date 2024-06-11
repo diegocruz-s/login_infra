@@ -1,5 +1,5 @@
-import { LoginController } from "../../application/controllers/Auth/LoginController";
-import { LoginUserUseCase } from "../../application/useCases/Auth/LoginUseCase";
+import { LoginController } from "../../application/controllers/Auth/AuthController";
+import { LoginUserUseCase } from "../../application/useCases/Auth/AuthUseCase";
 import { MongoAuthRepository } from "../../domain/repositories/mongo/MongoAuthRepository";
 import { CompareHashBcrypt } from "../utils/CompareHashBcrypt";
 import { GenerateTokenJWT } from "../utils/GenerateTokenJwt";
