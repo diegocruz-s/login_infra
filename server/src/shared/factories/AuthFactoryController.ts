@@ -13,9 +13,9 @@ export function loginFactoryController () {
     loginRepository, compareHashBcrypt, generateTokenJWT  
   );
 
-  const loginFactory = new LoginController(loginUserUseCase);
+  const loginController = new LoginController(loginUserUseCase);
 
   return {
-    loginFactory,
+    loginController,
   };
 };

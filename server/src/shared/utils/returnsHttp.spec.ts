@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
 import { User } from "../../domain/entities/User";
-import { ok, unprocessable } from "./returnsHttp";
+import { internalServerError, ok, unprocessable } from "./returnsHttp";
 
 describe('Returns HTTP', () => {
   it('should return a statusCode 200 and datas', async () => {
@@ -25,6 +25,15 @@ describe('Returns HTTP', () => {
     const returnError = unprocessable({ errors });
 
     expect(returnError.statusCode).toBe(422);
+    expect(returnError.body).toEqual({ errors });
+  });
+
+  it('should return a statusCode 500 and errors', async () => {
+    const errors = ['Any_error'];
+
+    const returnError = internalServerError({ errors });
+
+    expect(returnError.statusCode).toBe(500);
     expect(returnError.body).toEqual({ errors });
   });
 });

@@ -13,3 +13,10 @@ export function unprocessable(datas: Omit<IResponseLoginUser, 'datas'>) {
     body: datas,
   };
 };
+
+export function internalServerError(datas: Omit<IResponseLoginUser, 'datas'>) {
+  return {
+    statusCode: 500,
+    body: datas,
+  };
+};
