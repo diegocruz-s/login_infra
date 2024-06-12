@@ -31,7 +31,7 @@ export class LoginUserUseCase implements ILoginUserUseCase {
       hash: user.password,
     });
 
-    if (!isValidPass) {
+    if (!isValidPass) {      
       return {
         errors: ['Authenticated failed!'],
       };

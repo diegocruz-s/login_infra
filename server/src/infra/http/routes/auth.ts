@@ -13,6 +13,10 @@ routes.post('/', async (req, res) => {
 
 });
 
+routes.get('/', async (req, res) => {
+  return res.json({ hello: 'world!' })
+});
+
 export {
   routes as authRoutes
 };

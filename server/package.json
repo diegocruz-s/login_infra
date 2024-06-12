@@ -5,6 +5,7 @@
   "scripts": {
     "start:dev": "ts-node-dev src/server.ts",
     "start:build": "node build/src/server.js",
+    "create-user": "ts-node-dev src/infra/database/seed.ts",
     "build": "tsc -p .",
     "test": "jest"
   },
@@ -15,7 +16,7 @@
   "devDependencies": {
     "@swc/core": "^1.5.25",
     "@swc/jest": "^0.2.36",
-    "@types/bcrypt": "^5.0.2",
+    "@types/bcryptjs": "^2.4.6",
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.12",
     "@types/jsonwebtoken": "^9.0.6",
@@ -26,7 +27,7 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",

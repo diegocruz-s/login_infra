@@ -1,4 +1,4 @@
-import { compare } from "bcrypt";
+import { compare } from "bcryptjs";
 import { ICompareHash } from "../../application/useCases/Auth/protocols";
 
 export class CompareHashBcrypt implements ICompareHash {

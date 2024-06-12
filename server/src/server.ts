@@ -1,3 +1,3 @@
 import { app } from "./app";
 
-app.listen(Number(process.env.PORT) || 3000);
+app.start(3333); 
