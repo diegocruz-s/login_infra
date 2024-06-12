@@ -1,4 +1,11 @@
-FROM node:18-alpine
+FROM node:18
+
+RUN apt-get update && apt-get install -y \
+  python3 \
+  make \
+  g++ \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /home/node/api/node_modules && chown -R node:node /home/node/api
 
