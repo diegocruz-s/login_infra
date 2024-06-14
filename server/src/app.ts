@@ -1,7 +1,13 @@
 import 'dotenv/config';
 import express, { Express } from 'express';
 import { authRoutes } from './infra/http/routes/auth';
-import { DatabaseMongoDb } from './infra/database/MongoDatabase';
+import { DatabaseMongoDb, IDatasConnectMongo } from './infra/database/MongoDatabase';
+import { datasMongoUri } from './infra/config/dbConn';
+
+console.log("process.env.MONGODB_USERNAME!: ", process.env.MONGODB_USERNAME!);
+console.log("process.env.MONGODB_PASSWORD!: ", process.env.MONGODB_PASSWORD!);
+console.log("process.env.MONGODB_DATABASE!: ", process.env.MONGODB_DATABASE!);
+
 
 class AppController {
   app: Express;
@@ -26,7 +32,7 @@ class AppController {
   }; 
 
   async start (port: number) {
-    await DatabaseMongoDb.getInstance();
+    await DatabaseMongoDb.getInstance(datasMongoUri);
 
     this.app.listen(port, () => console.log(`Server running on port ${port}...`))
   };

@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "test": "jest",
+    "test:e2e": "jest --config jest-e2e.config.ts --detectOpenHandles",
     "start:dev": "ts-node-dev src/server.ts",
     "start:build": "node build/src/server.js",
     "create-user": "ts-node-dev src/infra/database/seed.ts",
-    "build": "tsc -p .",
-    "test": "jest"
+    "build": "tsc -p ."
   },
   "keywords": [],
   "author": "",

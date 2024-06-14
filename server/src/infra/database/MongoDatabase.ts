@@ -1,20 +1,30 @@
 import mongoose from "mongoose";
 
+export interface IDatasConnectMongo {
+  user: string;
+  password: string;
+  database: string;
+  port: string;
+  instance: string;
+};
+
 class DatabaseMongoDb {
   
   private static instance: DatabaseMongoDb | null = null;
 
-  public static async getInstance(): Promise<DatabaseMongoDb> {
-    if(DatabaseMongoDb.instance === null) {      
+  public static async getInstance(datas: IDatasConnectMongo): Promise<DatabaseMongoDb> {
+    if(DatabaseMongoDb.instance === null) {    
+      console.log('isConnectionNull');  
       DatabaseMongoDb.instance = new DatabaseMongoDb();
-      await DatabaseMongoDb.instance.connect();
+      await DatabaseMongoDb.instance.connect(datas);
     };
 
     return DatabaseMongoDb.instance;
   };
 
-  private async connect () {
-    const uri = `mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@mongo:27017/${process.env.MONGODB_DATABASE}`;
+  private async connect (datas: IDatasConnectMongo) {
+    const { user, password, instance, port, database } = datas;
+    const uri = `mongodb://${user}:${password}@${instance}:${port}/${database}`;
     
     try {
       await mongoose.connect(uri);
