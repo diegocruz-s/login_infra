@@ -4,11 +4,6 @@ import { authRoutes } from './infra/http/routes/auth';
 import { DatabaseMongoDb, IDatasConnectMongo } from './infra/database/MongoDatabase';
 import { datasMongoUri } from './infra/config/dbConn';
 
-console.log("process.env.MONGODB_USERNAME!: ", process.env.MONGODB_USERNAME!);
-console.log("process.env.MONGODB_PASSWORD!: ", process.env.MONGODB_PASSWORD!);
-console.log("process.env.MONGODB_DATABASE!: ", process.env.MONGODB_DATABASE!);
-
-
 class AppController {
   app: Express;
 
@@ -38,8 +33,8 @@ class AppController {
   };
 };
 
-const app = new AppController();
+const appController = new AppController();
 
 export {
-  app,
+  appController,
 };

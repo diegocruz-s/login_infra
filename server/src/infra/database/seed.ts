@@ -1,20 +1,35 @@
-import 'dotenv/config';
 
+import dotenv from 'dotenv';
 import { UserModel } from "../models/User";
 import { DatabaseMongoDb, IDatasConnectMongo } from './MongoDatabase';
 import bcrypt from "bcryptjs";
 
-console.log("process.env.MONGODB_USERNAME!: ", process.env.MONGODB_USERNAME!);
-console.log("process.env.MONGODB_PASSWORD!: ", process.env.MONGODB_PASSWORD!);
-console.log("process.env.MONGODB_DATABASE!: ", process.env.MONGODB_DATABASE!);
+interface IDatasSeedUser {
+  email: string;
+  password: string;
+  environment?: 'test' | 'development' | 'production';
+};
 
-async function createUser(email: string, password: string) {
+function loadEnv(environment: string) {
+  const result = environment === 'test' ? 
+    dotenv.config({ path: '.env.testing' }) : 
+    dotenv.config({ path: '.env' });
+
+  if (result.error) {
+    throw result.error;
+  }
+  console.log("Variáveis de ambiente carregadas:", result.parsed);
+}
+
+async function createUser({ email, password, environment = 'development' }: IDatasSeedUser) {
+  loadEnv(environment);
+
   try {
     const datasMongoUri: IDatasConnectMongo = {
       user: process.env.MONGODB_USERNAME!,
       password: process.env.MONGODB_PASSWORD!,
-      instance: 'mongo',
-      port: '27017',
+      instance: process.env.MONGODB_INSTANCE!,
+      port: process.env.MONGODB_PORT!,
       database: process.env.MONGODB_DATABASE!,
     };
     await DatabaseMongoDb.getInstance(datasMongoUri);
@@ -34,7 +49,7 @@ async function createUser(email: string, password: string) {
 const [email, password] = process.argv.slice(2);
 
 if (email && password) {  
-  createUser(email, password)
+  createUser({ email, password })
     .then(() => {
       console.log(`Usuário ${email} criado com sucesso`)
       process.exit();

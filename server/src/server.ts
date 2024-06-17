@@ -1,3 +1,3 @@
-import { app } from "./app";
+import { appController } from "./app";
 
-app.start(3333); 
+appController.start(3333); 
