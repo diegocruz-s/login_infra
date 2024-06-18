@@ -18,10 +18,9 @@ function loadEnv(environment: string) {
   if (result.error) {
     throw result.error;
   }
-  console.log("Variáveis de ambiente carregadas:", result.parsed);
 }
 
-async function createUser({ email, password, environment = 'development' }: IDatasSeedUser) {
+export async function createUser({ email, password, environment = 'development' }: IDatasSeedUser) {
   loadEnv(environment);
 
   try {
@@ -46,15 +45,17 @@ async function createUser({ email, password, environment = 'development' }: IDat
   }
 }
 
-const [email, password] = process.argv.slice(2);
-
-if (email && password) {  
-  createUser({ email, password })
-    .then(() => {
-      console.log(`Usuário ${email} criado com sucesso`)
-      process.exit();
-    })
-    .catch((err) => console.log('Error na criação de usuário: ', err));
-} else {
-  console.error('Provide data to create the user!');
-}
+if (require.main === module) {
+  const [email, password] = process.argv.slice(2);
+  
+  if (email && password) {  
+    createUser({ email, password })
+      .then(() => {
+        console.log(`Usuário ${email} criado com sucesso`)
+        process.exit();
+      })
+      .catch((err) => console.log('Error na criação de usuário: ', err));
+  } else {
+    console.error('Provide data to create the user!');
+  }
+};

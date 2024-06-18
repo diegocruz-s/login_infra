@@ -22,7 +22,7 @@ export class LoginUserUseCase implements ILoginUserUseCase {
 
     if (!user) {
       return {
-        errors: ['Authenticated failed!'],
+        errors: ['Authentication failed!'],
       };
     };
 
@@ -33,7 +33,7 @@ export class LoginUserUseCase implements ILoginUserUseCase {
 
     if (!isValidPass) {      
       return {
-        errors: ['Authenticated failed!'],
+        errors: ['Authentication failed!'],
       };
     };
 

@@ -90,7 +90,7 @@ describe('Login User Use Case', () => {
     
     expect(datas).toBeFalsy();
     expect(errors?.length).toBe(1);
-    expect(errors![0]).toBe('Authenticated failed!');
+    expect(errors![0]).toBe('Authentication failed!');
   });
 
   it('should return a error when password is not correct', async () => {
@@ -103,7 +103,7 @@ describe('Login User Use Case', () => {
     
     expect(datas).toBeFalsy();
     expect(errors?.length).toBe(1);
-    expect(errors![0]).toBe('Authenticated failed!');
+    expect(errors![0]).toBe('Authentication failed!');
   });
 
   it('should return a equal error when password and email is not correct', async () => {

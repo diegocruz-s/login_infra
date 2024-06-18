@@ -14,7 +14,6 @@ class DatabaseMongoDb {
 
   public static async getInstance(datas: IDatasConnectMongo): Promise<DatabaseMongoDb> {
     if(DatabaseMongoDb.instance === null) {    
-      console.log('isConnectionNull');  
       DatabaseMongoDb.instance = new DatabaseMongoDb();
       await DatabaseMongoDb.instance.connect(datas);
     };
