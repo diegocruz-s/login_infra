@@ -13,11 +13,11 @@ class DatabaseMongoDb {
   private static instance: DatabaseMongoDb | null = null;
 
   public static async getInstance(datas: IDatasConnectMongo): Promise<DatabaseMongoDb> {
-    if(DatabaseMongoDb.instance === null) {    
+    if(DatabaseMongoDb.instance === null) {          
       DatabaseMongoDb.instance = new DatabaseMongoDb();
       await DatabaseMongoDb.instance.connect(datas);
     };
-
+    
     return DatabaseMongoDb.instance;
   };
 
