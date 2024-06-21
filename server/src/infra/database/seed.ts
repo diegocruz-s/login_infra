@@ -12,7 +12,7 @@ interface IDatasSeedUser {
 
 function loadEnv(environment: string) {
   const result = environment === 'test' ? 
-    dotenv.config({ path: '.env.testing' }) : 
+    dotenv.config({ path: '.env-testing' }) : 
     dotenv.config({ path: '.env' });
 
   if (result.error) {

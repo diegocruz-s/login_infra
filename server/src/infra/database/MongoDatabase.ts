@@ -24,6 +24,8 @@ class DatabaseMongoDb {
   private async connect (datas: IDatasConnectMongo) {
     const { user, password, instance, port, database } = datas;
     const uri = `mongodb://${user}:${password}@${instance}:${port}/${database}`;
+    console.log('uri: ', uri);
+    
     
     try {
       await mongoose.connect(uri);

@@ -5,10 +5,10 @@ networks:
     driver: bridge
 
 services:
-  api: 
-    build: .
+  api_container: 
+    build: ./server
     volumes:
-      - .:/home/node/api
+      - ./server:/home/node/api
     environment:
       - MONGO_URL=mongo
     depends_on:
@@ -24,17 +24,12 @@ services:
     image: bitnami/mongodb:latest
     container_name: mongo
     restart: always
-    environment:
-      - ALLOW_EMPTY_PASSWORD=no
-      - MONGODB_USERNAME=${MONGODB_USERNAME}
-      - MONGODB_PASSWORD=${MONGODB_PASSWORD}
-      - MONGODB_ROOT_PASSWORD=${MONGODB_ROOT_PASSWORD}
-      - MONGODB_DATABASE=${MONGODB_DATABASE}
+    env_file:
+      - ./server/.env
     ports: 
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
-      # - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
     networks:
       - auth_network
 
@@ -42,18 +37,27 @@ services:
     image: bitnami/mongodb:latest
     container_name: mongo_test
     restart: always
-    environment:
-      - ALLOW_EMPTY_PASSWORD=no
-      - MONGODB_USERNAME=${MONGODB_USERNAME}
-      - MONGODB_PASSWORD=${MONGODB_PASSWORD}
-      - MONGODB_ROOT_PASSWORD=${MONGODB_ROOT_PASSWORD}
-      - MONGODB_DATABASE=${MONGODB_DATABASE_TEST}
+    env_file:
+      - ./server/.env-testing
     ports: 
       - "27018:27017"
     volumes:
       - mongo_data_test:/data/db
     networks:
-      - auth_network
+      - auth_network 
+
+  web:
+    build: ./web
+    networks:
+      - auth_network 
+    volumes:
+      - ./web:/usr/src/app
+    depends_on:
+      - api_container
+    container_name: web_app
+    ports:
+      - "5173:5173" 
+
 
 volumes: 
   mongo_data:

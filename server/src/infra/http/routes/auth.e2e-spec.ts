@@ -1,3 +1,5 @@
+import dotenv from 'dotenv';
+dotenv.config({ path: '.env.testing' });
 import request from 'supertest';
 import { appController } from '../../../app';
 import { createUser } from '../../database/seed';

@@ -1,6 +1,6 @@
 import jestConfig from './jest.config';
 import dotenv from 'dotenv';
-dotenv.config({ path: '.env.testing' });
+dotenv.config({ path: '.env-testing' });
 
 export default {
   ...jestConfig,

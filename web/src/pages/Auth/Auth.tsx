@@ -1,7 +1,13 @@
 import { useState } from 'react';
 import styles from './main.module.css';
+import { useAppDispatch, useAppSelector } from '../../store/store';
+import { login } from '../../store/slices/authSlice';
+import { Message } from '../../components/Message/Message';
 
 export const Auth = () => {
+  const dispatch = useAppDispatch();
+  const { loading: loadingLogin, error } = useAppSelector(state => state.auth);
+
   const [datasLogin, setDatasLogin] = useState({
     email: '',
     password: '',
@@ -9,7 +15,7 @@ export const Auth = () => {
 
   const onHandleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(datasLogin);
+    dispatch(login(datasLogin));
   };
 
   const onHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,13 +54,31 @@ export const Auth = () => {
           />
         </div>
 
-        <div className={styles.buttonSubmit}>
-          <button 
-            type='submit'
-          >
-            Send
-          </button>
-        </div>
+        { loadingLogin ? 
+          (
+            <div className={styles.buttonSubmit}>
+              <button 
+                type='button'
+                disabled
+              >
+                Wait...
+              </button>
+            </div>
+          ) :
+          (
+            <div className={styles.buttonSubmit}>
+              <button 
+                type='submit'
+              >
+                Send
+              </button>
+            </div>
+          )
+        }
+        
+        { error && <Message datas={{
+          message: error[0], typeMessage: 'error'
+        }} /> }
       </form>
     </div>
   );

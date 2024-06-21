@@ -1,4 +1,8 @@
+import dotenv from 'dotenv';
+dotenv.config({ path: '.env-testing' });
 import { DatabaseMongoDb } from "../../infra/database/MongoDatabase";
+
+console.log('process.env.MONGODB_DATABASE: ', process.env.MONGODB_DATABASE!);
 
 export const connectionDatabaseTest = async () => {
   const datasMongoUri = {
