@@ -4,6 +4,7 @@ import { authRoutes } from './infra/http/routes/auth';
 import { DatabaseMongoDb, IDatasConnectMongo } from './infra/database/MongoDatabase';
 import { datasMongoUri } from './infra/config/dbConn';
 import cors from 'cors';
+import { createUser } from './infra/database/seed';
 
 console.log('process.env.MONGODB_USERNAME!: ', process.env.MONGODB_USERNAME!)
 console.log('process.env.MONGODB_PASSWORD!: ', process.env.MONGODB_PASSWORD!)
@@ -17,13 +18,20 @@ class AppController {
   constructor() {
     this.app = express();
     this.cors();
-    this.database();
     this.middlewares();
     this.routes();
   };
 
-  database () {
-    new DatabaseMongoDb();
+  async seed () {
+    await createUser({
+      email: 'diego@gmail.com',
+      password: 'Diego@123',
+      environment: 'production',
+    });
+  };
+
+  async database () {
+    await DatabaseMongoDb.getInstance(datasMongoUri);
   };
 
   middlewares () {
@@ -39,8 +47,9 @@ class AppController {
   };
 
   async start (port: number) {
-    await DatabaseMongoDb.getInstance(datasMongoUri);
-
+    await this.database();
+    await this.seed();
+ 
     this.app.listen(port, () => console.log(`Server running on port ${port}...`))
   };
 };

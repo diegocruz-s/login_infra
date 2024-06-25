@@ -9,11 +9,16 @@ export interface IDatasConnectMongo {
 };
 
 class DatabaseMongoDb {
+  constructor() {
+    console.log('DatabaseMongoDb constructor called');
+  }
   
   private static instance: DatabaseMongoDb | null = null;
 
   public static async getInstance(datas: IDatasConnectMongo): Promise<DatabaseMongoDb> {
-    if(DatabaseMongoDb.instance === null) {          
+    if(DatabaseMongoDb.instance === null) {         
+      console.log('first instance MongoDB');  
+       
       DatabaseMongoDb.instance = new DatabaseMongoDb();
       await DatabaseMongoDb.instance.connect(datas);
     };
