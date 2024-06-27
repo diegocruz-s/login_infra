@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import express, { Express } from 'express';
 import { authRoutes } from './infra/http/routes/auth';
-import { DatabaseMongoDb, IDatasConnectMongo } from './infra/database/MongoDatabase';
+import { DatabaseMongoDb } from './infra/database/MongoDatabase';
 import { datasMongoUri } from './infra/config/dbConn';
 import cors from 'cors';
 import { createUser } from './infra/database/seed';
@@ -39,7 +39,7 @@ class AppController {
   };
 
   routes () {
-    this.app.use('/auth', authRoutes);
+    this.app.use('/auth', authRoutes);  
   }; 
 
   cors () {

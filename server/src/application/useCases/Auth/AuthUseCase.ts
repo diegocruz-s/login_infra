@@ -1,4 +1,6 @@
 import { User } from "../../../domain/entities/User";
+import { queueController } from "../../../infra/lib/Queue";
+import { EnumJobs } from "../../../jobs/interfaces/EnumJobs";
 import { IResponseLoginUser } from "../../interfaces/IReturnDatasLogin";
 import { 
   ExpiresIn, 
@@ -17,7 +19,7 @@ export class LoginUserUseCase implements ILoginUserUseCase {
   ){};
 
   async execute(datas: IDatasLoginUser): Promise<IResponseLoginUser> {
-    const { email, password } = datas;
+    const { email, password } = datas;    
     const user = await this.loginRepository.findUser({ email });
 
     if (!user) {
@@ -44,6 +46,9 @@ export class LoginUserUseCase implements ILoginUserUseCase {
     });
 
     const { password: notPass, ...rest } = user;
+    
+    await queueController.add(EnumJobs.REGISTRATIONMAIL, { user });
+    await queueController.add('ReportUser', { user });
 
     return {
       datas: {

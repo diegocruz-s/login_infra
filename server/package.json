@@ -5,7 +5,8 @@
   "scripts": {
     "test": "jest",
     "test:e2e": "jest --config jest-e2e.config.ts --detectOpenHandles",
-    "start:dev": "ts-node-dev src/server.ts",
+    "dev:start": "ts-node-dev --inspect --respawn --transpile-only src/server.ts",
+    "dev:queue": "ts-node-dev --inspect --respawn --transpile-only src/queue.ts",
     "start:build": "node build/src/server.js",
     "create-user": "ts-node-dev src/infra/database/seed.ts",
     "build": "tsc -p ."
@@ -32,11 +33,13 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "bull": "^4.14.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.4.1",
+    "npm-run-all": "^4.1.5",
     "zod": "^3.23.8"
   }
 }
