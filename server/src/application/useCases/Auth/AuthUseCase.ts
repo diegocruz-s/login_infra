@@ -1,5 +1,6 @@
 import { User } from "../../../domain/entities/User";
-import { queueController } from "../../../infra/lib/Queue";
+import { IParamsSendMail } from "../../../infra/interfaces/SendMail";
+import { IQueueController } from "../../../infra/lib/protocols";
 import { EnumJobs } from "../../../jobs/interfaces/EnumJobs";
 import { IResponseLoginUser } from "../../interfaces/IReturnDatasLogin";
 import { 
@@ -16,6 +17,7 @@ export class LoginUserUseCase implements ILoginUserUseCase {
     private readonly loginRepository: ILoginUserRepository,
     private readonly compareHash: ICompareHash,
     private readonly generateToken: IGenerateToken,
+    private readonly queueController: IQueueController,
   ){};
 
   async execute(datas: IDatasLoginUser): Promise<IResponseLoginUser> {
@@ -47,8 +49,17 @@ export class LoginUserUseCase implements ILoginUserUseCase {
 
     const { password: notPass, ...rest } = user;
     
-    await queueController.add(EnumJobs.REGISTRATIONMAIL, { user });
-    await queueController.add('ReportUser', { user });
+    const datasSendMail: IParamsSendMail = {
+      email: 'diegosouzacruz464@gmail.com',
+      name: 'Diego',
+      to: email,
+      messageDatas: {
+        subject: 'Send Mail Testing Application Nekst',
+        body: 'Sending email testing for Nekst using AWS and background jobs!!!',
+      },
+    };
+    await this.queueController.add(EnumJobs.REGISTRATIONMAIL, datasSendMail); 
+    // await this.queueController.add('ReportUser', { user });
 
     return {
       datas: {
@@ -58,3 +69,5 @@ export class LoginUserUseCase implements ILoginUserUseCase {
     };
   };
 };
+
+// chaveUserSES

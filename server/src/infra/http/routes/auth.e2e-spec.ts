@@ -1,19 +1,38 @@
 import dotenv from 'dotenv';
 dotenv.config({ path: '.env.testing' });
 import request from 'supertest';
+import mongoose from 'mongoose';
+import sinon from 'sinon';
+
 import { appController } from '../../../app';
 import { createUser } from '../../database/seed';
-import mongoose from 'mongoose';
 import { UserModel } from '../../models/User';
 import { connectionDatabaseTest } from '../../../tests/e2e/ConnectionDatabaseTest';
+import { queueController } from '../../lib/Queue';
+import { SES } from 'aws-sdk';
 
 const user = {
   email: 'diego@gmail.com',
   password: 'Diego@123',
 };
+const fixedResponseSES = {
+  datasTest: 'Email Stub Sinon',
+};
+const fixedResponseQueue = {
+  datasTest: 'Email Stub Sinon',
+};
+
 
 describe('Auth[e2e]', () => {
   beforeAll(async () => {
+    const ses = new SES();
+    sinon.stub(ses, 'sendEmail').returns({
+      promise: () => Promise.resolve(fixedResponseSES),
+    } as any);
+    sinon.stub(queueController, 'add').returns({
+      promise: () => Promise.resolve(fixedResponseQueue),
+    } as any);
+
     await connectionDatabaseTest();
   });
 
@@ -22,6 +41,7 @@ describe('Auth[e2e]', () => {
   });
 
   afterAll(async () => {
+    await queueController.close();
     await mongoose.connection.close();
   });
 
@@ -35,7 +55,7 @@ describe('Auth[e2e]', () => {
     const response = await request(appController.app)
       .post('/auth')
       .send({ email: user.email, password: user.password });
-
+    
     expect(response.status).toBe(200);
     expect(response.body.datas).toBeTruthy();
     expect(response.body.datas.user).toHaveProperty('_id');

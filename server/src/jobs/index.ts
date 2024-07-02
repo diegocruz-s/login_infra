@@ -1,4 +1,7 @@
-import { RegistrationMail } from './SendMail';
-import { ReportUser } from './ReportUser';
+import { SendMailAws } from '../infra/services/SendMailAws';
+import { RegistrationMail } from './RegistrationMail';
+// import { ReportUser } from './ReportUser';
 
-export const jobs = [new RegistrationMail(), new ReportUser()];
+const sendMailAws = new SendMailAws();
+
+export const jobs = [new RegistrationMail(sendMailAws)]; 

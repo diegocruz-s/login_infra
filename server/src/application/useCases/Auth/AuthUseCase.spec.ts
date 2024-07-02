@@ -3,8 +3,27 @@ import { LoginUserUseCase } from "./AuthUseCase";
 import { User } from '../../../domain/entities/User';
 import { ICompareHash, IGenerateToken, ILoginUserRepository } from './protocols';
 import { randomUUID } from 'crypto';
+import { IQueueController } from '../../../infra/lib/protocols';
 
 const user = new User({ email: 'any@email.com', password: 'Any_pass' });
+
+const makeFakeQueueController = () => {
+  class QueueController implements IQueueController {
+    async add(name: string, data: unknown): Promise<unknown> {
+      return data;
+    };
+
+    async process(): Promise<void> {
+      console.log('proccess!'); 
+    };
+  };
+
+  const queueController = new QueueController();
+
+  return {
+    queueController,
+  };
+};
 
 const makeFakeLoginRepository = () => { 
   class LoginRepository implements ILoginUserRepository {
@@ -55,8 +74,10 @@ const makeLoginUserUseCase = () => {
   const { loginRepository } = makeFakeLoginRepository();
   const { compareHash } = makeFakeCompareHash();
   const { generateToken } = makeFakeGenerateToken();
+  const { queueController } = makeFakeQueueController();
+
   const loginUserUseCase = new LoginUserUseCase(
-    loginRepository, compareHash, generateToken
+    loginRepository, compareHash, generateToken, queueController
   );
 
   return {

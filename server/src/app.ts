@@ -24,7 +24,7 @@ class AppController {
 
   async seed () {
     await createUser({
-      email: 'diego@gmail.com',
+      email: 'diegoszcruz1001@gmail.com',
       password: 'Diego@123',
       environment: 'production',
     });
